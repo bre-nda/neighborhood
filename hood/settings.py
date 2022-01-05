@@ -12,6 +12,19 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 import os
 from pathlib import Path
+from decouple import config,Csv
+import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+import django_heroku
+
+
+MODE=config("MODE", default="dev")
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = os.environ.get('DEBUG', True)
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +39,7 @@ SECRET_KEY = 'django-insecure-qa^646h(h#lvqs@qr+g!$5zpt=+a7bjd6az1s0j9m-25khc6q5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 
 # Application definition
@@ -40,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'thehood',
     'bootstrap4',
+    'cloudinary',
     'crispy_forms',
     'rest_framework',
 ]
@@ -79,13 +93,15 @@ WSGI_APPLICATION = 'hood.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+   'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'hood',
-        'USER': 'brenda',
-    'PASSWORD':'andeso2018',
+        'NAME': config('DB_NAME'),
+        'USER' :   config('DB_USER'),
+        'PASSWORD' :  config('DB_PASSWORD'),
     }
 }
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 
 # Password validation
@@ -124,10 +140,28 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# adding config
+cloudinary.config( 
+  cloud_name = "dxszxm1de", 
+  api_key = "425287129295112", 
+  api_secret = "G2q33r2xhFA47cpvXLhhHWwTNPk" 
+)
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dxszxm1de',
+    'API_KEY': '425287129295112',
+    'API_SECRET': 'G2q33r2xhFA47cpvXLhhHWwTNPk'
+}
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -135,3 +169,4 @@ STATICFILES_DIRS = [
 LOGIN_REDIRECT_URL = 'home'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+django_heroku.settings(locals())
