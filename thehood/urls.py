@@ -5,5 +5,6 @@ from thehood import views
 urlpatterns=[
     path('', views.home, name = 'home'),
     path('logout/',auth_views.LogoutView.as_view(template_name = 'registration/logout.html')),
+    path('profile/', views.profile, name='profile'),
     
 ]
