@@ -1,7 +1,25 @@
-{%extends 'base.html'%}
-{% block content %} 
-{{ block.super}}
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body style="background-image: url(/static/css/media/back.jpeg);background-position: center;
+background-size: cover;
+background-repeat: no-repeat;">
+      <div class="container" > 
+        <div class="text text-center" style="margin-top:15%">
+            <h1>The Hood</h1>
+            <h5 style="margin-top:6%">Welcome! join a hood <span style="color: rgb(9, 151, 16);">  today</span></h5>
+        </div>
 
-<h2>Welcome to the hood</h2>
+    </div>
+</body>
+</html>
 
 {% endblock %}
