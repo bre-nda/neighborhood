@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="container" style="margin-top:6%">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-3">
+                <div class="row no-gutters">
+                    <div class="col-md-5">
+                        <img src="{{ hood.photo.url }}" class="card-img" alt="...">
+                    </div>
+                    <div class="col-md-7" >
+                        <div class="card-body">
+                            <h5 class="card-title tt">{{ hood.name }}
+                            </h5>
+                            <p>Location:{{hood.location}}</p>
+                            <p class="card-text">{{hood.description}}</p>
+                            <p class="card-text"><span class="text-info">Police Toll:</span>
+                                &nbsp;<strong>{{hood.police_toll}}</strong> |
+                                <span class="text-info">Hospital Toll:</span> <strong>{{hood.health_toll}}</strong></p>
+                            <p class="card-text">Administrator: <small class="text-muted">
+                                {{ hood.admin.user.username }}</small></p>
+                        </div>
+                        <a href="{% url 'business' hood.id %}" class="btn btn-sm btn-outline-info ml-4 mb-4 mr-4 " style="margin-top: 5%;color: black;" >Add
+                            Business</a><span>
+                        <a class="btn btn-sm  " href="/businesses/{{hood.id}}" style="margin-top: 4%;background-color: red;color: white;">View Businesses </a><br><br>
+                        </span>
+                        <a class="btn btn-sm btn-outline-info ml-4 mb-4" href="{% url 'news' hood.id %}" style="color: black;">New Post</a>
+                        <a class="btn btn-sm btn-dark ml-4" href="/post/{{hood.id}}" style="margin-top: -4%;background-color: red;">View Post </a><br><br>
+
+                    </div>
+                </div>
+            </div>
+        </div>     
+    </div>
+</div>
+<style>
+    .card-img{
+        height: 500px;
+    }
+</style>
+{% endblock %}
