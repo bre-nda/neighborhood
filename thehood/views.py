@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http  import HttpResponse
 
 from thehood.models import Business, NeighbourHood, Post, Profile
-from .forms import ProfileUpdateForm,UserUpdateForm,NeighbourHoodForm
+from .forms import ProfileUpdateForm,UserUpdateForm,NeighbourHoodForm,PostForm,BusinessForm
 from django.contrib import messages
 # Create your views here.
 
@@ -64,3 +64,55 @@ def new_hood(request):
     else:
         form = NeighbourHoodForm()
     return render(request, 'new.html', {'form': form})
+
+def business(request, hood_id):
+    hood = NeighbourHood.objects.get(id=hood_id)
+    business = Business.objects.filter(neighbourhood=hood)
+    if request.method == "POST":
+        form = BusinessForm(request.POST)
+        if form.is_valid():
+            biz = form.save(commit=False)
+            biz.hood = hood
+            biz.user = request.user.profile
+            biz.save()
+            return redirect('single-hood', hood.id)
+    else:
+         form = BusinessForm()
+    return render(request, 'biz.html', {'hood':hood,'business':business,'form': form,})
+
+def news(request, hood_id):
+    hood = NeighbourHood.objects.get(id=hood_id)
+    posts = Post.objects.filter(hood=hood)
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.hood = hood
+            post.user = request.user.profile
+            post.save()
+            return redirect('single-hood', hood.id)
+    else:
+         form = PostForm()
+    return render(request, 'news.html', {'hood':hood,'posts':posts,'form': form})
+
+def join_hood(request, id):
+    neighbourhood = get_object_or_404(NeighbourHood, id=id)
+    request.user.profile.neighbourhood = neighbourhood
+    request.user.profile.save()
+    return redirect('hood')
+    
+def leave_hood(request, id):
+    hood = get_object_or_404(NeighbourHood, id=id)
+    request.user.profile.neighbourhood = None
+    request.user.profile.save()
+    return redirect('hood')
+
+def businesses(request, hood_id):
+    hood = NeighbourHood.objects.get(id=hood_id)
+    business = Business.objects.filter(neighbourhood=hood)
+    return render(request, 'business.html', {'business': business})
+
+def post(request, hood_id):
+    hood = NeighbourHood.objects.get(id=hood_id)
+    post = Post.objects.filter(hood=hood)
+    return render(request, 'post.html', {'post': post})
