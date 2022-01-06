@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http  import HttpResponse
 
-from thehood.models import Profile
-from .forms import ProfileUpdateForm,UserUpdateForm
+from thehood.models import Business, NeighbourHood, Post, Profile
+from .forms import ProfileUpdateForm,UserUpdateForm,NeighbourHoodForm
 from django.contrib import messages
 # Create your views here.
 
@@ -33,3 +33,34 @@ def profile(request):
     }
     return render(request,'profile.html',context)
 
+def hoods(request):
+    hoodss = NeighbourHood.objects.all()
+    hoodss = hoodss[::-1]
+    params = {
+        'hoodss': hoodss,
+    }
+    return render(request, 'hoods.html', params)
+
+def single_hood(request, hood_id):
+    hood = NeighbourHood.objects.get(id=hood_id)
+    business = Business.objects.filter(neighbourhood=hood)
+    posts = Post.objects.filter(hood=hood)
+    posts = posts[::-1]
+    params = {
+        'hood': hood,
+        'business': business,
+        'posts': posts
+    }
+    return render(request, 'single.html', params)
+
+def new_hood(request):
+    if request.method == 'POST':
+        form = NeighbourHoodForm(request.POST, request.FILES)
+        if form.is_valid():
+            hood = form.save(commit=False)
+            hood.admin = request.user.profile
+            hood.save()
+            return redirect('hood')
+    else:
+        form = NeighbourHoodForm()
+    return render(request, 'new.html', {'form': form})
