@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container-fluid">
+        <a href="{% url 'new-hood' %}" class="btn btn-sm btn-info mb-2" style="margin-top: 6%; background-color: red;"> New Hood</a>
+    <div class="row">
+        {% for hood in hoodss %}
+        <div class="col-md-4">
+            <div class="card mb-4" style="min-height:320px">
+                <h6 class="card-title"><a href="{% url 'single-hood' hood.id%}" style="color:black;"> {{hood.name }}</a></h6>
+                <img src="{{ hood.photo.url }}" class="card-img-top img-fluid" alt="{{ hood.name }}">
+                <div class="card-body">
+                    <p class="card-text">{{hood.location}}</p>
+                    <p class="card-text">{{hood.description}}</p>
+                    {%if request.user.profile.neighbourhood == hood %}
+                    <a class="btn-sm" href="{%url 'leave-hood' hood.id%}" style="background-color: red;color: white;">Leave Hood</a>
+
+                    {%elif not request.user.profile.neighbourhood%}
+
+
+                    <a class="btn-sm" href="{%url 'join-hood' hood.id%}" style="background-color: red;color: white;">Join Hood</a>
+
+                    {%endif%}
+                    <a href="{% url 'single-hood' hood.id %}" class="btn btn-primary btn-sm ml-4" style="background-color: white;color: black;">View hood</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<style>
+    .img-fluid{
+        height: 300px;
+    }
+</style>
+{% endblock %}
