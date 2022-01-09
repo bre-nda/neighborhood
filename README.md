@@ -37,11 +37,11 @@ bash python manage.py test
 Open the application on your browser 127.0.0.1:8000.
 
 ## Technologies Used
-Python3.8
-Django 3.2.8
-Bootstrap4
-CSS
-HTML
+* Python3.8
+* Django 3.2.8
+* Bootstrap4
+* CSS
+* HTML
 ## Contributing
 Any contributions you make are greatly appreciated.
 
