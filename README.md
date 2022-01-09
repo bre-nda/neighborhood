@@ -5,11 +5,6 @@ Brenda Andeso.
 ## Description
 This is a Django neighbourhood website application where a user must sign up first then update their profile.This will enable the user to join a hood and once the user has joined  a hood, he/she can see businesses and news in the neighbourhood they belong to.
 
-## Screenshot
-<img src="/static/media/Screenshot from 2022-01-09 18-43-05.png">
-
-
-
 ## Setup/Installation Requirements
 To get the project .......
 
