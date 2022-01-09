@@ -3,12 +3,16 @@ from django.http  import HttpResponse
 
 from thehood.models import Business, NeighbourHood, Post, Profile
 from .forms import ProfileUpdateForm,UserUpdateForm,NeighbourHoodForm,PostForm,BusinessForm
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+import datetime as dt
 # Create your views here.
 
+@login_required
 def home(request):
     return render(request, 'home.html')
 
+@login_required
 def profile(request):
     try:
         profile = request.user.profile
@@ -100,13 +104,14 @@ def join_hood(request, id):
     request.user.profile.neighbourhood = neighbourhood
     request.user.profile.save()
     return redirect('hood')
-    
+
 def leave_hood(request, id):
     hood = get_object_or_404(NeighbourHood, id=id)
     request.user.profile.neighbourhood = None
     request.user.profile.save()
     return redirect('hood')
 
+@login_required(login_url='/accounts/login/')
 def businesses(request, hood_id):
     hood = NeighbourHood.objects.get(id=hood_id)
     business = Business.objects.filter(neighbourhood=hood)
@@ -116,3 +121,16 @@ def post(request, hood_id):
     hood = NeighbourHood.objects.get(id=hood_id)
     post = Post.objects.filter(hood=hood)
     return render(request, 'post.html', {'post': post})
+
+def search_results(request):
+    if 'query' in request.POST and request.GET['query']: 
+        search = request.GET.get('query')
+        search_business= Business.search_by_title(search)
+        messages= f'{search}'
+        context = {"message":messages,"businesses":search_business}
+        
+        return render(request,'search.html',context)
+
+    else:
+        message="You haven't searched for any item"
+        return render(request,'search.html',{"message":message}) 
