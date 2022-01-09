@@ -15,4 +15,5 @@ urlpatterns=[
     path('leave_hood/<id>', views.leave_hood, name='leave-hood'),
     path('businesses/<hood_id>', views.businesses, name='businesses'),
     path('post/<hood_id>', views.post, name='post'),
+    path('search/',views.search_results,name='search_results'),
 ]
