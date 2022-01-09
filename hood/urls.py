@@ -19,6 +19,8 @@ from django.conf.urls import url,include
 from django.contrib.auth import views
 from django.contrib.auth.views import LoginView, logout_then_login, LogoutView
 
+from hood.settings import STATIC_ROOT
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('thehood.urls')),
